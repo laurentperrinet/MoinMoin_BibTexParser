@@ -1,0 +1,11 @@
+= MoinMoin - Simple bibtex parser =
+
+   Based on Matt Cooper's keyval parser
+  
+   Copyright: 2012 by Laurent Perrinet
+   Copyright: 2010 by Ryota Tomioka
+   Copyright: 2006 by Matt Cooper <macooper@vt.edu>
+   License: GNU GPL
+   Version: 1.0
+
+

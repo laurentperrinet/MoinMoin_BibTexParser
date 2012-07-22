@@ -16,6 +16,7 @@ from MoinMoin import wikiutil
 
 
 def latex2unicode(str):
+    # translation dictionary
     tab = {"\\\"u": "&uuml;",
            "\\\"o": "&ouml;",
            "\\\"e": "&euml;",
@@ -32,6 +33,7 @@ def latex2unicode(str):
     return str
 
 def removepar(str):
+    str = str.replace("{","").replace("}","")
     str = str.replace("{","").replace("}","")
     return str
 
@@ -191,7 +193,7 @@ class Parser:
         If a delimiter isn't found, the line is not turned into a key-value pair
     """
     
-    parsername = "KeyValueParser"
+    parsername = "BibTex"
     
     def __init__(self, raw, request, **kw):
         self.request = request
