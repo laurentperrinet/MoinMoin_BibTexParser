@@ -44,6 +44,7 @@ def removepar(str):
 
 class Bibitem:
     def __init__(self):
+        # fields common to all entries
         self.bib = {"title":"", "author":"", "year":"", "url":""}
 
     def setValue(self, key, val):
@@ -56,7 +57,7 @@ class Bibitem:
 
     # TODO: include abstract by unfolding it 
     # TODO: include bibtex entry by unfolding it 
-    # TODO: better format instread of one line at a time
+    # TODO: better handle format instead of one line at a time
     # TODO: include DOI and link
     # TODO: remove duplicate entries
     # TODO: include citeulike links
@@ -69,6 +70,10 @@ class Bibitem:
         authors = self.bib["author"].split(" and ")
         result = []
         for author in authors:
+            if "," in author:
+                # TODO: handle the more complex cases?
+                name, surname = author.split(", ")
+                author = surname + " " + name
             result.append(latex2unicode(author.strip()))
         return ", ".join(result)+"." # TODO: reverse Firstname, Lastname and write and at the end 
 
