@@ -1,15 +1,20 @@
 #FORMAT python
 # -*- coding: UTF-8 -*-
 """
-   MoinMoin - Simple bibtex parser
 
-   Based on Matt Cooper's keyval parser
+A parser to display bibtex code with a nice formatting within MoinMoin wiki pages.
 
+The parsing is done in pure pytho, so that you will not need external programs. This 
+parser script should work for MoinMoin 1.9.3.
+   
    Copyright: 2012 by Laurent Perrinet -- see https://github.com/meduz/MoinMoin_BibTexParser
    Copyright: 2010 by Ryota Tomioka -- see http://moinmo.in/ParserMarket/SimpleBibtex
-   Copyright: 2006 by Matt Cooper <macooper@vt.edu>
+   Based on Matt Cooper's keyval parser Copyright: 2006 by Matt Cooper <macooper@vt.edu>
+   
    License: GNU GPL
+   
    Version: 1.0
+
 """
 import re
 from MoinMoin import wikiutil
