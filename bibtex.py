@@ -45,7 +45,7 @@ def removepar(str):
 class Bibitem:
     def __init__(self):
         # fields common to all entries
-        self.bib = {"title":"", "author":"", "year":"", "url":""}
+        self.bib = {"title":"", "author":"", "year":"", "url":"", "abstract":""}
 
     def setValue(self, key, val):
         if key.lower().strip() in self.bib.keys() and not(self.bib[key.lower().strip()] == ""):
@@ -55,7 +55,6 @@ class Bibitem:
         else:
             self.bib[key.lower().strip()] = removepar(val.lstrip('" ').rstrip(' ",'))
 
-    # TODO: include abstract by unfolding it 
     # TODO: include bibtex entry by unfolding it 
     # TODO: better handle format instead of one line at a time
     # TODO: include DOI and link
@@ -75,7 +74,12 @@ class Bibitem:
                 name, surname = author.split(", ")
                 author = surname + " " + name
             result.append(latex2unicode(author.strip()))
-        return ", ".join(result)+"." # TODO: reverse Firstname, Lastname and write and at the end 
+        return ", ".join(result)+"."
+
+    def format_abstract(self):
+        result = self.bib["abstract"]
+    # TODO: include abstract by unfolding it 
+        return "<p style=\"font-size:x-small;\"> %s </p> " % result
 
     def format_title(self):
         title = latex2unicode(self.bib["title"])
@@ -109,7 +113,8 @@ class BibitemJournal(Bibitem):
 
     def format(self):
         if len(self.bib["title"]) > 0:
-            return "<li>%s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_journal(), self.format_volnumpages(), self.bib["year"])
+            #return "<li>%s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_journal(), self.format_volnumpages(), self.bib["year"])
+            return "<li>%s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_journal(), self.format_volnumpages(), self.bib["year"], self.format_abstract())
         else:
             return ""
 
