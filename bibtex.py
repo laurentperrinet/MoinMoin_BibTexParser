@@ -130,7 +130,7 @@ class Bibitem:
             tmp += ", "
             for i_url, url in enumerate(self.bib["url"].split('+')):
                 number = ""
-                if i_url > 1: number = str(i_url+1)
+                if i_url > 0: number = str(i_url+1)
                 tmp += "<a href=\"%s\">URL%s</a> " % (url.strip(), number)
             tmp += '.'
             return tmp
