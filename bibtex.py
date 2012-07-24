@@ -31,7 +31,9 @@ def latex2unicode(str):
            "~"    : " ",
            "\\'e" : "&eacute;",
            "\\'E" : "&Eacute;",
-           "\\`e" : "&egrave;"}
+           "\\`e" : "&egrave;",
+           "\\`E" : "&Egrave;",
+           }
 
     for key in tab.keys():
         str = str.replace(key, tab[key])
@@ -232,7 +234,7 @@ class Parser:
         result = []
         while lines:
             line = lines.pop(0)
-#             line = latex2unicode(line)
+            line = latex2unicode(line)
             if len(line.strip()) > 0 and line.strip()[0] == "@": # bibitem type
                 # Output the last bibitem
                 if bib is not None:
@@ -252,14 +254,17 @@ class Parser:
 
             elif line.find(delimiter) > -1: # we found a line with a "=" sign
                 (k, v) = line.split(delimiter, 1)
-#                 counter = v.count('{') - v.count('}') # counting the number of "{" minus the number of "}". should be zero o exit
-#                 v += "----" + string(counter)
-#                 while not(counter == 0):
-#                     line = lines.pop(0).strip('\n')
-#                     line = latex2unicode(line)
-#                     v += line + "----" + string(counter)
-#                     counter += v.count('{') - v.count('}')
-# 
+                #counter = v.count('{') - v.count('}') # counting the number of "{" minus the number of "}". should be zero o exit
+                v += "----" + str(v.count('{') - v.count('}'))
+                if True: # False: ##while True:
+                    if (v.count('{') - v.count('}') < 0): break
+                    line = lines.pop(0)
+                    line = line.strip('\n')
+                    #line = latex2unicode(line)
+                    v += line #+ "----" + str(v.count('{') - v.count('}'))
+                    # v += "---- } " + str(v.count('{') - v.count('}'))
+                    #if not(v.find('}')==-1): break
+
                 if bib is not None:
                     bib.setValue(k, v)
                 else:
@@ -276,4 +281,3 @@ class Parser:
 
         self.raw = "<ul>\n%s</ul>\n" % linesep.join(result)
         self.request.write(formatter.rawHTML(self.raw))
-
