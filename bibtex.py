@@ -19,6 +19,36 @@ parser script should work for MoinMoin 1.9.3.
 import re
 from MoinMoin import wikiutil
 
+show_hide = """
+<script language="javascript"> 
+function toggle() {
+    var ele = document.getElementById("toggleText");
+    var text = document.getElementById("displayText");
+    if(ele.style.display == "block") {
+            ele.style.display = "none";
+        text.innerHTML = "show";
+    }
+    else {
+        ele.style.display = "block";
+        text.innerHTML = "hide";
+    }
+} 
+</script>
+"""
+
+show_hide_old = """
+<script type="text/javascript">
+function hideshow(which){
+if (!document.getElementById)
+return
+if (which.style.display=="block")
+which.style.display="none"
+else
+which.style.display="block"
+}
+</script>
+
+"""
 
 def latex2unicode(str):
     # translation dictionary
@@ -80,8 +110,14 @@ class Bibitem:
 
     def format_abstract(self):
         result = self.bib["abstract"]
-    # TODO: include abstract by unfolding it 
-        return "<i> %s </i> " % result
+        # TODO: include abstract by unfolding it 
+#         tmp = '<a href="javascript:hideshow(document.getElementById("%s"))">abstract</a>' % self.bib["author"]
+#         tmp += '<div id="%s" style="font:12px ; display: block"> %s </div>' % (self.bib["author"], result)
+
+        tmp = '<a id="displayText" href="javascript:toggle();">abstract</a>'
+        tmp += '<div id="toggleText" style="display: none"> %s </div>' % result
+        return tmp
+#    return "<i> %s </i> " % result
 #         return "<p style=\"font-size:x-small;\"> %s </p> " % result
 
     def format_title(self):
@@ -272,6 +308,7 @@ class Parser:
 
         if bib is not None:
             result.append(bib.format())
-
-        self.raw = "<ul>\n%s</ul>\n" % linesep.join(result)
+        self.raw = show_hide
+        self.raw += "<ul>\n%s</ul>\n" % linesep.join(result)
         self.request.write(formatter.rawHTML(self.raw))
+
