@@ -81,15 +81,14 @@ class Bibitem:
     def format_abstract(self):
         result = self.bib["abstract"]
     # TODO: include abstract by unfolding it 
-        return "<p style=\"font-size:x-small;\"> %s </p> " % result
+        return "<i> %s </i> " % result
+#         return "<p style=\"font-size:x-small;\"> %s </p> " % result
 
     def format_title(self):
         title = latex2unicode(self.bib["title"])
         tmp = "<u>%s</u>" % (title)
 
-    # TODO: title is a link to the first URL encountered
-
-#         return "<a href=\"%s\">%s</a>." % (self.bib["url"], title)
+        # TODO: title is a link to the first URL encountered
         if not(self.bib["url"] == ""):
 #             return "<u>%s</u>, <a href=\"%s\">URL</a>." % (title, self.bib["url"])
             tmp += ", "
@@ -254,16 +253,11 @@ class Parser:
 
             elif line.find(delimiter) > -1: # we found a line with a "=" sign
                 (k, v) = line.split(delimiter, 1)
-                #counter = v.count('{') - v.count('}') # counting the number of "{" minus the number of "}". should be zero o exit
-                v += "----" + str(v.count('{') - v.count('}'))
-                if True: # False: ##while True:
-                    if (v.count('{') - v.count('}') < 0): break
+                while (v.count('{') - v.count('}')) > 0:
                     line = lines.pop(0)
-                    line = line.strip('\n')
                     #line = latex2unicode(line)
-                    v += line #+ "----" + str(v.count('{') - v.count('}'))
-                    # v += "---- } " + str(v.count('{') - v.count('}'))
-                    #if not(v.find('}')==-1): break
+                    v += line
+                v = v.strip('\n')
 
                 if bib is not None:
                     bib.setValue(k, v)
