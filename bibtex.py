@@ -35,10 +35,10 @@ def latex2unicode(str):
 
     for key in tab.keys():
         str = str.replace(key, tab[key])
+#         str = str.replace("{" + key + "}", tab[key])# case where the character is enclosed in curly brackets
     return str
 
 def removepar(str):
-    str = str.replace("{", "").replace("}", "")
     str = str.replace("{", "").replace("}", "")
     return str
 
@@ -50,7 +50,7 @@ class Bibitem:
     def setValue(self, key, val):
         if key.lower().strip() in self.bib.keys() and not(self.bib[key.lower().strip()] == ""):
             key_ = key.lower().strip()
-            tmp = self.bib[key_]
+            tmp = self.bib[key_] # ????
             self.bib[key_] += ' + ' + removepar(val.lstrip('" ').rstrip(' ",'))
         else:
             self.bib[key.lower().strip()] = removepar(val.lstrip('" ').rstrip(' ",'))
@@ -86,7 +86,6 @@ class Bibitem:
         tmp = "<u>%s</u>" % (title)
 
     # TODO: title is a link to the first URL encountered
-
 
 #         return "<a href=\"%s\">%s</a>." % (self.bib["url"], title)
         if not(self.bib["url"] == ""):
@@ -184,6 +183,7 @@ class BibitemInCollection(BibitemBook):
     def format(self):
         if len(self.bib["title"]) > 0:
             return "<li>%s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"])
+#             return "<li>%s %s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"], self.format_abstract())
         else:
             return ""
 
@@ -232,31 +232,40 @@ class Parser:
         result = []
         while lines:
             line = lines.pop(0)
+#             line = latex2unicode(line)
             if len(line.strip()) > 0 and line.strip()[0] == "@": # bibitem type
                 # Output the last bibitem
                 if bib is not None:
                     result.append(bib.format())
 
                 # New bibitem begins
-                type = line[1:-1].split("{", 1)[0]
-                if type.lower() == "incollection" or type.lower() == "inproceedings" or type.lower() == "conference":
+                bibitem_type = line[1:-1].split("{", 1)[0] # the type is the string between "@" and "{" and we drop the rest (hoping we end the line after the citekey and ",")
+                bibitem_type = bibitem_type.lower()
+                if bibitem_type == "incollection" or bibitem_type == "inproceedings" or bibitem_type == "conference":
                     bib = BibitemInCollection()
-                elif type.lower() == "book":
+                elif bibitem_type == "book":
                     bib = BibitemBook()
-                elif type.lower() == "techreport":
+                elif bibitem_type == "techreport":
                     bib = BibitemTechreport()
                 else:
                     bib = BibitemJournal()
 
-            elif line.find(delimiter) > -1:
+            elif line.find(delimiter) > -1: # we found a line with a "=" sign
                 (k, v) = line.split(delimiter, 1)
-
+#                 counter = v.count('{') - v.count('}') # counting the number of "{" minus the number of "}". should be zero o exit
+#                 v += "----" + string(counter)
+#                 while not(counter == 0):
+#                     line = lines.pop(0).strip('\n')
+#                     line = latex2unicode(line)
+#                     v += line + "----" + string(counter)
+#                     counter += v.count('{') - v.count('}')
+# 
                 if bib is not None:
                     bib.setValue(k, v)
                 else:
                     result.append("Strange line [%s] found\n" % line)
 
-            # if there is no delimiter...
+            # if there is no delimiter, we append the proper formatting of the bibitem to the results:
             else:
                 if bib is not None and bib.isReady():
                     result.append(bib.format())
@@ -267,3 +276,4 @@ class Parser:
 
         self.raw = "<ul>\n%s</ul>\n" % linesep.join(result)
         self.request.write(formatter.rawHTML(self.raw))
+
