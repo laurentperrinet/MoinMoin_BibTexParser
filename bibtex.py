@@ -35,7 +35,7 @@ def latex2unicode(str):
 
     for key in tab.keys():
         str = str.replace(key, tab[key])
-#         str = str.replace("{" + key + "}", tab[key])# case where the character is enclosed in curly brackets
+        str = str.replace("{" + key + "}", tab[key])# case where the character is enclosed in curly brackets
     return str
 
 def removepar(str):
@@ -182,8 +182,8 @@ class BibitemInCollection(BibitemBook):
 
     def format(self):
         if len(self.bib["title"]) > 0:
-            return "<li>%s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"])
-#             return "<li>%s %s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"], self.format_abstract())
+#             return "<li>%s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"])
+            return "<li>%s %s %s %s %s %s %s.</li>" % (self.format_author(), self.format_title(), self.format_booktitle(), self.format_pages(), self.format_pubadd(), self.bib["year"], self.format_abstract())
         else:
             return ""
 
